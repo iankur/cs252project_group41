@@ -1,5 +1,6 @@
 import httplib2
 import csv
+import json
 import requests
 from bs4 import BeautifulSoup, SoupStrainer
 
@@ -15,11 +16,11 @@ for a_Tag in BeautifulSoup(response, parseOnlyThese=SoupStrainer('a')).find_all(
 
 courses = []
 
-for course_link in courses_links[:10]:
+for course_link in courses_links[:]:
 	r = requests.get(course_link)
 	soup = BeautifulSoup(r.text)
 	
-	course_details = []
+	course_details = {}
 	for course_data in soup.select('.page'):
 		h1 = len(course_data.findAll('h1'))
 		h2 = len(course_data.findAll('h2'))
@@ -30,44 +31,54 @@ for course_link in courses_links[:10]:
                 p = len(course_data.findAll('p'));
 		ol = len(course_data.findAll('ol'));
 		k = ''
-                course_details.append(k)
-		course_details.append(k)
-		course_details.append(k)
-                course_details.append(k)
+                course_details['course_details'] = '';
+		course_details['course_credit'] = '';
+		course_details['course_preReq'] = '';
+                course_details['course_name'] = '';
+                course_details['course_id'] = '';
 		if ol > 0 :
 			course_content = []
                         li = len(course_data.findAll('ol')[0].findAll('li'))
                         for k in range(0,li):
-				course_details[3] = course_details[3] + "\n" + course_data.findAll('li')[k].text.strip()
+				course_details['course_details'] = course_details['course_details'] +str('\n') +str('(')+ str(k + 1) + str(')')+ course_data.findAll('li')[k].text.strip()
 		
 		for k in range(0,h5) :
 			if 'Units:' in course_data.findAll('h5')[k].text.strip() :
-				course_details[2] = course_data.findAll('h5')[k].text.strip()
+				course_details['course_credit'] = course_data.findAll('h5')[k].text.strip()
 		for k in range(0,p) :
 			if 'Units:' in course_data.findAll('p')[k].text.strip() :
-				course_details[2] = course_data.findAll('p')[k].text.strip()
+				course_details['course_credit'] = course_data.findAll('p')[k].text.strip()
 		for k in range(0,h5) :
 			if 'Pre-re' in course_data.findAll('h5')[k].text.strip() :
-				course_details[1] = course_data.findAll('h5')[k].text.strip()
+				course_details['course_preReq'] = course_data.findAll('h5')[k].text.strip()
 		for k in range(0,p) :
 			if 'Pre-re' in course_data.findAll('p')[k].text.strip() :
-				course_details[1] = course_data.findAll('p')[k].text.strip()  
+				course_details['course_preReq'] = course_data.findAll('p')[k].text.strip()  
 		if h1 > 0 :	
-			course_details[0] = course_data.findAll('h1')[0].text.strip()
+			l = course_data.findAll('h1')[0].text.strip()
 		elif h2 > 0:
-			course_details[0] = course_data.findAll('h2')[0].text.strip()
+			l = course_data.findAll('h2')[0].text.strip()
 		elif p > 0:
-			course_details[0] = course_data.findAll('p')[0].text.strip()
-		
-		              			
-		print  course_details[0]
-		print course_details[2]
-		print course_details[1]
-		print 'Content : ' + course_details[3][:]
+			l = course_data.findAll('p')[0].text.strip()
+		words = l.split()
+                t = len(words)
+                if words[0]=='CS' or words[0]=='ESc':
+                	course_details['course_id']= words[0] +str('-') + words[1][:-1]
+			for m in range(2,t):
+				course_details['course_name'] =course_details['course_name']+ str(' ') +words[m]
+		elif 'CS' in words[0]:
+			course_details['course_id']= words[0][:-1]
+			for m in range(1,t):
+				course_details['course_name'] =course_details['course_name']+ str(' ') +words[m]		
+		else:
+			course_details['course_name'] =l[:-1]		              			
+		print  course_details['course_id']
+		print  course_details['course_name']
+		print l 
 	
 	courses.append(course_details)	
-with open ('data.csv','wb') as file:
-   writer=csv.writer(file)
-   writer = csv.writer(file, delimiter = '$')
-   for row in courses:
-      writer.writerow([row])
+
+
+file = open("json", "w")
+json.dump(courses, file)
+file.close()
