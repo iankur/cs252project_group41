@@ -50,6 +50,12 @@ def add_review(request, course_id):
         rating = form.cleaned_data['rating']
         comment = form.cleaned_data['comment']
         summary = form.cleaned_data['summary']
+
+        course.ratings.total += rating
+        course.ratings.count += 1
+        if course.ratings.average != 0:
+            course.ratings.average = course.ratings.total/course.ratings.average
+
 #        user_name = form.cleaned_data['user_name']
         user_name = request.user.username
         review = Review()

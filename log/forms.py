@@ -13,6 +13,8 @@ class ReviewForm(ModelForm):
     class Meta:
         model = Review
         fields = ['rating', 'comment', 'summary']#['user_name', 'rating', 'comment']
+ #       readonly_fields=('star',)
         widgets = {
+          #  'star': 'star-ratings',
             'comment': Textarea(attrs={'cols': 50, 'rows': 10})
         }

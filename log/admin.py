@@ -14,8 +14,8 @@ class ReviewAdmin(admin.ModelAdmin):
 class CourseResource(resources.ModelResource):
     class Meta:
         model = Course 
-        import_id_fields = ('course_id', 'course_name', 'course_credit', 'course_preReq', 'course_details')
-        fields = ('course_id', 'course_name', 'course_credit', 'course_preReq', 'course_details')
+        import_id_fields = ('course_id', 'course_name', 'course_details', 'course_credit', 'course_preReq', 'course_details')
+        fields = ('course_id', 'course_name', 'course_details', 'course_credit', 'course_preReq')
 
 class CourseAdmin(ImportExportModelAdmin):
     resource_class = CourseResource

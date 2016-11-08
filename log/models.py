@@ -5,13 +5,17 @@ from django.db import models
 from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 
+from django.contrib.contenttypes.fields import GenericRelation
+from star_ratings.models import Rating
+
 # Create your models here.
 class Course(models.Model):
-    course_id = models.CharField(max_length=20)
-    course_name = models.CharField(max_length=200)
+    course_id = models.CharField(max_length=20, default = 'Course')
+    course_name = models.CharField(max_length=200, null=True)
     course_preReq = models.CharField(max_length=100, null=True)
     course_details = models.TextField(null=True)
 #    review = models.ForeignKey(Review, on_delete=models.CASCADE)
+    ratings = GenericRelation(Rating, related_query_name='course_name')
 
     def average_rating(self):
 #        all_ratings = map(lambda x: float(x.rating), self.review_set.all())
@@ -34,6 +38,8 @@ class Review(models.Model):
     user_name = models.CharField(max_length=100)
     comment = models.TextField(null=True)
     rating = models.IntegerField(choices=RATING_CHOICES)
+    summary = models.CharField(max_length=100)
+#    star = GenericRelation(Rating)
 #    pub_date = models.DateTimeField('date published')
 
     def was_published_recently(self):

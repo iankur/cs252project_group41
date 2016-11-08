@@ -1,6 +1,6 @@
 
 	{% load staticfiles %}
-
+    {% load static %}
 	<!DOCTYPE html>
 	<html>
 
@@ -10,6 +10,42 @@
 	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 	    <title>Course Reviews</title>
+<!--
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+    <script type="text/javascript">
+$(function() {
+    $('span.stars').stars();
+});
+
+$.fn.stars = function() {
+//function st(a){
+    return $(this).each(function() {
+//        var val = eval("a");
+        // Get the value
+        var val = parseInt($(this).html());
+        // Make sure that the value is in 0 - 5 range, multiply to get width
+        var size = Math.max(0, (Math.min(5, val))) * 16;
+        // Create stars holder
+        var $span = $('<span />').width(size);
+        // Replace the numerical value with stars
+        $(this).html($span);
+    });
+        }
+    </script>
+    <style type="text/css">
+        span.stars, span.stars span {
+            display: block;
+            background:  url(/static/stars.png) 0 -16px repeat-x;
+            width: 80px;
+            height: 16px;
+        }
+    
+        span.stars span {
+            background-position: 0 0;
+        }
+    </style>
+
+-->
 
 	    <!-- Core CSS - Include with every page -->
 	    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
@@ -61,10 +97,17 @@
 	            {% block content %}
 	            {% endblock %}
 
+<link rel="stylesheet" href="{% static 'star-ratings/css/star-ratings.css' %}">
+<script type="text/javascript" src="{% static 'star-ratings/js/dist/star-ratings.min.js' %}"></script>
+
 	    <!-- Core Scripts - Include with every page -->
 	    <script src = "{% static 'js/jquery.min.js' %}"></script>
 
 	    <script src = "{% static 'js/bootstrap.min.js' %}"></script>
+<!--
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+    <script type="text/javascript">
+-->
 	    {% block javascript %}
 	    {% endblock %}
 
